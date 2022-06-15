@@ -20,10 +20,10 @@
 # until that's done, disable LTO.  This has to happen before setting the flags below.
 %define _lto_cflags %{nil}
 
-%global host_version 6.0.5
-%global runtime_version 6.0.5
+%global host_version 6.0.6
+%global runtime_version 6.0.6
 %global aspnetcore_runtime_version %{runtime_version}
-%global sdk_version 6.0.105
+%global sdk_version 6.0.106
 %global sdk_feature_band_version %(echo %{sdk_version} | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 %global templates_version %{runtime_version}
 #%%global templates_version %%(echo %%{runtime_version} | awk 'BEGIN { FS="."; OFS="." } {print $1, $2, $3+1 }')
@@ -91,8 +91,17 @@ Patch102:       runtime-fedora-37-rid.patch
 # https://github.com/dotnet/runtime/pull/66594
 Patch103:       runtime-66594-s390x-debuginfo.patch
 
+# https://github.com/dotnet/command-line-api/pull/1401
+Patch300:       command-line-api-use-work-tree-with-git-apply.patch
+
+# https://github.com/microsoft/vstest/pull/3046
+Patch400:       vstest-use-work-tree-with-git-apply.patch
+
 # Disable apphost, needed for s390x
 Patch500:       fsharp-no-apphost.patch
+
+# This is the suggestion from https://github.com/dotnet/source-build/pull/2450, applied
+Patch600:       xliff-tasks-use-work-tree-with-git-apply.patch
 
 # Disable apphost, needed for s390x
 Patch700:       arcade-no-apphost.patch
@@ -235,10 +244,10 @@ Requires:       dotnet-hostfxr-6.0%{?_isa} >= %{host_rpm_version}-%{release}
 # libicu is dlopen()ed
 Requires:       libicu%{?_isa}
 
-# See src/runtime.*/src/libraries/Native/AnyOS/brotli-version.txt
+# See src/runtime/src/libraries/Native/AnyOS/brotli-version.txt
 Provides: bundled(libbrotli) = 1.0.9
 %if %{use_bundled_libunwind}
-# See src/runtime.*/src/coreclr/pal/src/libunwind/libunwind-version.txt
+# See src/runtime/src/coreclr/pal/src/libunwind/libunwind-version.txt
 Provides: bundled(libunwind) = 1.5.rc1.28.g9165d2a1
 %endif
 
@@ -397,33 +406,46 @@ ln -s %{_libdir}/dotnet/reference-packages/Private.SourceBuild.ReferencePackages
 %endif
 
 # Fix bad hardcoded path in build
-sed -i 's|/usr/share/dotnet|%{_libdir}/dotnet|' src/runtime.*/src/native/corehost/hostmisc/pal.unix.cpp
+sed -i 's|/usr/share/dotnet|%{_libdir}/dotnet|' src/runtime/src/native/corehost/hostmisc/pal.unix.cpp
 
-pushd src/runtime.*
+pushd src/runtime
 %patch100 -p1
 %patch101 -p1
 %patch102 -p1
 %patch103 -p1
 popd
 
-pushd src/fsharp.*
+pushd src/command-line-api
+%patch300 -p1
+popd
+
+pushd src/vstest
+%patch400 -p1
+popd
+
+
+pushd src/fsharp
 %patch500 -p1
 popd
 
-pushd src/arcade.*
+pushd src/xliff-tasks
+%patch600 -p1
+popd
+
+pushd src/arcade
 %patch700 -p1
 popd
 
-pushd src/roslyn.*
+pushd src/roslyn
 %patch800 -p3
 %patch801 -p1
 popd
 
-pushd src/roslyn-analyzers.*
+pushd src/roslyn-analyzers
 %patch900 -p1
 popd
 
-pushd src/msbuild.*
+pushd src/msbuild
 
 # These are mono-specific fixes. Mono is only used on s390x. Restrict
 # patch to s390x to avoid potential risk in other architectures.
@@ -434,18 +456,18 @@ pushd src/msbuild.*
 
 popd
 
-pushd src/sdk.*
+pushd src/sdk
 %patch1500 -p1
 %patch1501 -p1
 popd
 
-pushd src/installer.*
+pushd src/installer
 %patch1600 -p1
 popd
 
 
 %if ! %{use_bundled_libunwind}
-sed -i -E 's|( /p:BuildDebPackage=false)|\1 --cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE|' src/runtime.*/eng/SourceBuild.props
+sed -i -E 's|( /p:BuildDebPackage=false)|\1 --cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE|' src/runtime/eng/SourceBuild.props
 %endif
 
 %build
@@ -550,7 +572,7 @@ install dotnet.sh %{buildroot}%{_sysconfdir}/profile.d/
 
 install -dm 0755 %{buildroot}/%{_datadir}/bash-completion/completions
 # dynamic completion needs the file to be named the same as the base command
-install src/sdk.*/scripts/register-completions.bash %{buildroot}/%{_datadir}/bash-completion/completions/dotnet
+install src/sdk/scripts/register-completions.bash %{buildroot}/%{_datadir}/bash-completion/completions/dotnet
 
 # TODO: the zsh completion script needs to be ported to use #compdef
 #install -dm 755 %%{buildroot}/%%{_datadir}/zsh/site-functions
@@ -643,6 +665,9 @@ export COMPlus_LTTng=0
 
 
 %changelog
+* Wed Jun 15 2022 Omair Majid <omajid@redhat.com> - 6.0.106-1
+- Update to .NET SDK 6.0.106 and Runtime 6.0.6
+
 * Wed May 11 2022 Omair Majid <omajid@redhat.com> - 6.0.105-1
 - Update to .NET SDK 6.0.105 and Runtime 6.0.5
 

@@ -5,6 +5,15 @@ inspections:
   emptyrpm: off
   # We patch upstream a lot, no need to reject patches
   patches: off
+badfuncs:
+  ignore:
+    # TODO This removes all badfuncs checks on libcoreclr! Use
+    # https://github.com/rpminspect/rpminspect/issues/573 to filter
+    # out the specific issues when that's available
+
+    # inet_addr: mono/s390x uses inet_addr for some internal
+    # debugging. See runtime/src/mono/mono/mini/cfgdump.c
+    - /usr/lib*/dotnet/shared/Microsoft.NETCore.App/6.0.*/libcoreclr.so
 runpath:
   # Upstream explicitly sets $ORIGIN/netcoredeps as an RPATH
   # See https://github.com/dotnet/core/blob/main/Documentation/self-contained-linux-apps.md

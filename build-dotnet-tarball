@@ -182,19 +182,19 @@ fi
 # not-very-useful artifacts to reduce tarball size
 
 # Binaries for gradle
-rm -r src/aspnetcore.*/src/SignalR/clients/java/signalr/gradle*
+rm -r src/aspnetcore/src/SignalR/clients/java/signalr/gradle*
 
 # Unnecessary crypto implementation: IDEA
-rm -r src/runtime.*/src/tests/JIT/Performance/CodeQuality/Bytemark/
+rm -r src/runtime/src/tests/JIT/Performance/CodeQuality/Bytemark/
 
 # https://github.com/dotnet/aspnetcore/issues/34785
-find src/aspnetcore.*/src -type d -name samples -print0 | xargs -0 rm -r
+find src/aspnetcore/src -type d -name samples -print0 | xargs -0 rm -r
 
 # https://github.com/NuGet/Home/issues/11094
-rm -r src/nuget-client.*/test/EndToEnd
+rm -r src/nuget-client/test/EndToEnd
 
 # https://github.com/Humanizr/sample-aspnetmvc/issues/1
-rm -r src/source-build.*/src/humanizer/samples/
+rm -r src/source-build/src/humanizer/samples/
 
 popd
 

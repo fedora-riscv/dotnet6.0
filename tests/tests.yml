@@ -28,6 +28,7 @@
     - dotnet-sdk-6.0
     - dotnet-runtime-6.0
     - expect
+    - file
     - git
     - jq
     - lldb
