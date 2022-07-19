@@ -20,10 +20,10 @@
 # until that's done, disable LTO.  This has to happen before setting the flags below.
 %define _lto_cflags %{nil}
 
-%global host_version 6.0.6
-%global runtime_version 6.0.6
+%global host_version 6.0.7
+%global runtime_version 6.0.7
 %global aspnetcore_runtime_version %{runtime_version}
-%global sdk_version 6.0.106
+%global sdk_version 6.0.107
 %global sdk_feature_band_version %(echo %{sdk_version} | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 %global templates_version %{runtime_version}
 #%%global templates_version %%(echo %%{runtime_version} | awk 'BEGIN { FS="."; OFS="." } {print $1, $2, $3+1 }')
@@ -86,10 +86,8 @@ Source11:       dotnet.sh.in
 Patch100:       runtime-arm64-lld-fix.patch
 # Mono still has a dependency on (now unbuildable) ILStrip which was removed from CoreCLR: https://github.com/dotnet/runtime/pull/60315
 Patch101:       runtime-mono-remove-ilstrip.patch
-# https://github.com/dotnet/runtime/pull/65392
-Patch102:       runtime-fedora-37-rid.patch
 # https://github.com/dotnet/runtime/pull/66594
-Patch103:       runtime-66594-s390x-debuginfo.patch
+Patch102:       runtime-66594-s390x-debuginfo.patch
 
 # https://github.com/dotnet/command-line-api/pull/1401
 Patch300:       command-line-api-use-work-tree-with-git-apply.patch
@@ -412,7 +410,6 @@ pushd src/runtime
 %patch100 -p1
 %patch101 -p1
 %patch102 -p1
-%patch103 -p1
 popd
 
 pushd src/command-line-api
@@ -665,6 +662,9 @@ export COMPlus_LTTng=0
 
 
 %changelog
+* Mon Jul 18 2022 Omair Majid <omajid@redhat.com> - 6.0.107-1
+- Update to .NET SDK 6.0.107 and Runtime 6.0.7
+
 * Wed Jun 15 2022 Omair Majid <omajid@redhat.com> - 6.0.106-1
 - Update to .NET SDK 6.0.106 and Runtime 6.0.6
 
