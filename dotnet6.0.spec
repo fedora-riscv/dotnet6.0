@@ -20,10 +20,10 @@
 # until that's done, disable LTO.  This has to happen before setting the flags below.
 %define _lto_cflags %{nil}
 
-%global host_version 6.0.7
-%global runtime_version 6.0.7
+%global host_version 6.0.8
+%global runtime_version 6.0.8
 %global aspnetcore_runtime_version %{runtime_version}
-%global sdk_version 6.0.107
+%global sdk_version 6.0.108
 %global sdk_feature_band_version %(echo %{sdk_version} | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 %global templates_version %{runtime_version}
 #%%global templates_version %%(echo %%{runtime_version} | awk 'BEGIN { FS="."; OFS="." } {print $1, $2, $3+1 }')
@@ -60,7 +60,7 @@
 
 Name:           dotnet6.0
 Version:        %{sdk_rpm_version}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        .NET Runtime and SDK
 License:        MIT and ASL 2.0 and BSD and LGPLv2+ and CC-BY and CC0 and MS-PL and EPL-1.0 and GPL+ and GPLv2 and ISC and OFL and zlib
 URL:            https://github.com/dotnet/
@@ -89,18 +89,8 @@ Patch101:       runtime-mono-remove-ilstrip.patch
 # https://github.com/dotnet/runtime/pull/66594
 Patch102:       runtime-66594-s390x-debuginfo.patch
 
-# https://github.com/dotnet/command-line-api/pull/1401
-Patch300:       command-line-api-use-work-tree-with-git-apply.patch
-
-# https://github.com/microsoft/vstest/pull/3046
-Patch400:       vstest-use-work-tree-with-git-apply.patch
-
 # Disable apphost, needed for s390x
 Patch500:       fsharp-no-apphost.patch
-
-# This is the suggestion from https://github.com/dotnet/source-build/pull/2450, applied
-Patch600:       xliff-tasks-use-work-tree-with-git-apply.patch
-
 # Disable apphost, needed for s390x
 Patch700:       arcade-no-apphost.patch
 
@@ -400,7 +390,6 @@ rm -rf packages/source-built
 
 mkdir -p packages/archive
 ln -s %{_libdir}/dotnet/source-built-artifacts/Private.SourceBuilt.Artifacts.*.tar.gz packages/archive/
-ln -s %{_libdir}/dotnet/reference-packages/Private.SourceBuild.ReferencePackages*.tar.gz packages/archive/
 %endif
 
 # Fix bad hardcoded path in build
@@ -412,21 +401,8 @@ pushd src/runtime
 %patch102 -p1
 popd
 
-pushd src/command-line-api
-%patch300 -p1
-popd
-
-pushd src/vstest
-%patch400 -p1
-popd
-
-
 pushd src/fsharp
 %patch500 -p1
-popd
-
-pushd src/xliff-tasks
-%patch600 -p1
 popd
 
 pushd src/arcade
@@ -662,6 +638,9 @@ export COMPlus_LTTng=0
 
 
 %changelog
+* Tue Aug 09 2022 Omair Majid <omajid@redhat.com> - 6.0.108-1
+- Update to .NET SDK 6.0.108 and Runtime 6.0.8
+
 * Thu Jul 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 6.0.107-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 
