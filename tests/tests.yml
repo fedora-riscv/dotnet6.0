@@ -24,17 +24,23 @@
     - aspnetcore-runtime-6.0
     - babeltrace
     - bash-completion
+    - bc
     - binutils
-    - dotnet-sdk-6.0
     - dotnet-runtime-6.0
+    - dotnet-sdk-6.0
     - expect
     - file
+    - findutils
     - git
     - jq
     - lldb
     - lttng-tools
     - npm
+    - postgresql-odbc
+    - postgresql-server
+    - procps-ng
     - python3
     - strace
+    - util-linux
     - wget
     - which
