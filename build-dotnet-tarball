@@ -123,21 +123,21 @@ if [ ! -f "${unmodified_tarball_name}.tar.gz" ]; then
     git submodule update --init --recursive
     clean_dotnet_cache
     mkdir -p "../${unmodified_tarball_name}"
-    ./build.sh /p:ArcadeBuildTarball=true /p:TarballDir="$(readlink -f ../"${unmodified_tarball_name}")"
-    popd
+    ./build.sh /p:ArcadeBuildTarball=true
+
+    mv artifacts/packages/Debug/Shipping/dotnet-sdk-source-6.*.tar.gz \
+        ../../"${unmodified_tarball_name}.tar.gz"
 
     popd
-
-    tar cf "${unmodified_tarball_name}.tar.gz" -C "${temp_dir}" "${unmodified_tarball_name}"
+    popd
 
     rm -rf "${temp_dir}"
 fi
 
 rm -rf "${tarball_name}"
-tar xf "${unmodified_tarball_name}.tar.gz"
-mv "${unmodified_tarball_name}" "${tarball_name}"
-
+mkdir -p "${tarball_name}"
 pushd "${tarball_name}"
+tar xf ../"${unmodified_tarball_name}.tar.gz"
 
 if [[ ${build_bootstrap} == true ]]; then
     if [[ "$(wc -l < packages/archive/archiveArtifacts.txt)" != 1 ]]; then

@@ -9,7 +9,7 @@
     repositories:
     - repo: "https://github.com/redhat-developer/dotnet-regular-tests.git"
       dest: "dotnet-regular-tests"
-      version: main
+      version: "main"
     tests:
       - download_test_runner:
           dir: ./
@@ -19,7 +19,7 @@
           run: dotnet turkey/Turkey.dll --version
       - regular:
           dir: ./
-          run: dotnet turkey/Turkey.dll -l={{ remote_artifacts }} dotnet-regular-tests
+          run: dotnet turkey/Turkey.dll -l={{ remote_artifacts }} dotnet-regular-tests --timeout=1500
     required_packages:
     - aspnetcore-runtime-6.0
     - babeltrace
@@ -31,6 +31,7 @@
     - expect
     - file
     - findutils
+    - gcc-c++
     - git
     - jq
     - lldb
