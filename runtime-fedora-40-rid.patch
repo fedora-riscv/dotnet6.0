@@ -1,0 +1,98 @@
+From 8bafc61a5e0b172e030b3c354ee7a9dc1d113a3a Mon Sep 17 00:00:00 2001
+From: Omair Majid <omajid@redhat.com>
+Date: Wed, 9 Aug 2023 16:43:30 -0400
+Subject: [PATCH] Add Fedora 40 RID
+
+---
+ .../src/runtime.compatibility.json            | 32 +++++++++++++++++++
+ .../src/runtime.json                          | 17 ++++++++++
+ .../src/runtimeGroups.props                   |  2 +-
+ 3 files changed, 50 insertions(+), 1 deletion(-)
+
+diff --git a/src/libraries/Microsoft.NETCore.Platforms/src/runtime.compatibility.json b/src/libraries/Microsoft.NETCore.Platforms/src/runtime.compatibility.json
+index bf9dcefffef..79e07f75eed 100644
+--- a/src/libraries/Microsoft.NETCore.Platforms/src/runtime.compatibility.json
++++ b/src/libraries/Microsoft.NETCore.Platforms/src/runtime.compatibility.json
+@@ -4432,6 +4432,38 @@
+     "any",
+     "base"
+   ],
++  "fedora.40": [
++    "fedora.40",
++    "fedora",
++    "linux",
++    "unix",
++    "any",
++    "base"
++  ],
++  "fedora.40-arm64": [
++    "fedora.40-arm64",
++    "fedora.40",
++    "fedora-arm64",
++    "fedora",
++    "linux-arm64",
++    "linux",
++    "unix-arm64",
++    "unix",
++    "any",
++    "base"
++  ],
++  "fedora.40-x64": [
++    "fedora.40-x64",
++    "fedora.40",
++    "fedora-x64",
++    "fedora",
++    "linux-x64",
++    "linux",
++    "unix-x64",
++    "unix",
++    "any",
++    "base"
++  ],
+   "freebsd": [
+     "freebsd",
+     "unix",
+diff --git a/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json b/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json
+index 4bc419bbfde..8fbe76a76b4 100644
+--- a/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json
++++ b/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json
+@@ -1498,6 +1498,23 @@
+         "fedora-x64"
+       ]
+     },
++    "fedora.40": {
++      "#import": [
++        "fedora"
++      ]
++    },
++    "fedora.40-arm64": {
++      "#import": [
++        "fedora.40",
++        "fedora-arm64"
++      ]
++    },
++    "fedora.40-x64": {
++      "#import": [
++        "fedora.40",
++        "fedora-x64"
++      ]
++    },
+     "freebsd": {
+       "#import": [
+         "unix"
+diff --git a/src/libraries/Microsoft.NETCore.Platforms/src/runtimeGroups.props b/src/libraries/Microsoft.NETCore.Platforms/src/runtimeGroups.props
+index 5fe956f0be5..e596bf65aae 100644
+--- a/src/libraries/Microsoft.NETCore.Platforms/src/runtimeGroups.props
++++ b/src/libraries/Microsoft.NETCore.Platforms/src/runtimeGroups.props
+@@ -71,7 +71,7 @@
+     <RuntimeGroup Include="fedora">
+       <Parent>linux</Parent>
+       <Architectures>x64;arm64</Architectures>
+-      <Versions>23;24;25;26;27;28;29;30;31;32;33;34;35;36;37;38;39</Versions>
++      <Versions>23;24;25;26;27;28;29;30;31;32;33;34;35;36;37;38;39;40</Versions>
+       <TreatVersionsAsCompatible>false</TreatVersionsAsCompatible>
+     </RuntimeGroup>
+ 
+-- 
+2.41.0
+
