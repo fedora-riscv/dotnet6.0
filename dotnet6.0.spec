@@ -60,7 +60,7 @@
 
 Name:           dotnet6.0
 Version:        %{sdk_rpm_version}
-Release:        1%{?dist}
+Release:        1.r64%{?dist}
 Summary:        .NET Runtime and SDK
 License:        MIT and ASL 2.0 and BSD and LGPLv2+ and CC-BY and CC0 and MS-PL and EPL-1.0 and GPL+ and GPLv2 and ISC and OFL and zlib
 URL:            https://github.com/dotnet/
@@ -115,9 +115,9 @@ Patch1500:      sdk-telemetry-optout.patch
 
 
 %if 0%{?fedora} || 0%{?rhel} >= 8
-ExclusiveArch:  aarch64 x86_64 s390x
+ExclusiveArch:  aarch64 x86_64 s390x riscv64
 %else
-ExclusiveArch:  x86_64
+ExclusiveArch:  x86_64 riscv64
 %endif
 
 
